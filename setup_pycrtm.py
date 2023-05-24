@@ -120,13 +120,18 @@ def moveCrtmCoefficients(srcDir, destDir):
     if os.path.isdir(destDir):
         shutil.rmtree(destDir)
 
+    endianness = ("{}_endian".format(sys.byteorder)).title()
+
     os.makedirs(destDir)
+    counter = 0
 
     for root, dirs, files in os.walk(srcDir):
         for filename in files:
-            shutil.copy2(os.path.join(root, filename), destDir)
+            if endianness in root or 'netCDF' in root:
+                counter+=1
+                shutil.copy2(os.path.join(root, filename), destDir)
 
-    print("Copied to {}".format(destDir))   
+    print("{} coefficient files copied to {}".format(counter, destDir))   
 
     return
 
